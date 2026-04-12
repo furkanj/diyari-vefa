@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diyarı Vefa - VIP Yönetim Paneli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --vip-gold: #d4af37; /* Gerçek Altın Tonu */
+            --vip-bg: #0a0a0a;   /* Derin Siyah Arka Plan */
+            --card-bg: #141414;  /* Kartlar için lüks gri-siyah */
+            --border-color: #2a2a2a;
+        }
+
+        body {
+            background-color: var(--vip-bg);
+            color: #e0e0e0;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding-bottom: 50px;
+            text-align: center;
+        }
+
+        /* Üst Başlık Alanı */
+        .panel-header {
+            background: linear-gradient(180deg, #000 0%, var(--vip-bg) 100%);
+            padding: 40px 20px;
+            border-bottom: 1px solid var(--vip-gold);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .panel-header h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--vip-gold);
+            letter-spacing: 5px;
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        .vip-subtitle {
+            color: var(--vip-gold);
+            opacity: 0.6;
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        /* Talep Listesi ve Kartlar */
+        #talepListesi {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        .talep-kart {
+            background: var(--card-bg);
+            border-left: 5px solid var(--vip-gold);
+            margin-bottom: 20px;
+            padding: 25px;
+            border-radius: 4px 15px 15px 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            border-top: 1px solid #1f1f1f;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .talep-bilgi {
+            text-align: left;
+        }
+
+        .talep-bilgi strong {
+            color: var(--vip-gold);
+            font-size: 1.3rem;
+            display: block;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .talep-turu {
+            color: #ffffff;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .zaman {
+            color: #666;
+            font-size: 0.8rem;
+            display: block;
+            margin-top: 10px;
+        }
+
+        /* Onay Butonu */
+        .tamam-btn {
+            background: transparent;
+            border: 1px solid var(--vip-gold);
+            color: var(--vip-gold);
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+        }
+
+        .tamam-btn:hover {
+            background: var(--vip-gold);
+            color: #000;
+            box-shadow: 0 0 15px var(--vip-gold);
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bildirimSesi" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
+
+    <header class="panel-header">
+        <h1>🔔 CANLI TALEPLER</h1>
+        <div class="vip-subtitle">Diyarı Vefa Yönetim Paneli</div>
+    </header>
+
+    <div id="talepListesi">
+        </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // FIREBASE CONFIG (Seninkini buraya yapıştır)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAw_0IovkGJLXoSpG8NlhReI1zACh5Quis",
+            authDomain: "diyar-i-vefa-menu-e2aa9.firebaseapp.com",
+            databaseURL: "https://diyar-i-vefa-menu-e2aa9-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "diyar-i-vefa-menu-e2aa9",
+            storageBucket: "diyar-i-vefa-menu-e2aa9.firebasestorage.app",
+            messagingSenderId: "741373134834",
+            appId: "1:741373134834:web:47614d282765b4b529cd6b"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        const talepListesiDiv = document.getElementById('talepListesi');
+        const audio = document.getElementById("bildirimSesi");
+
+        // Veritabanını anlık dinliyoruz
+        onValue(ref(database, 'talepler'), (snapshot) => {
+            // Sesi çal (Hata vermemesi için catch ekledik)
+            audio.play().catch(e => console.log("Ses için ekrana tıklayın."));
+
+            talepListesiDiv.innerHTML = ""; 
+            
+            if (!snapshot.exists()) {
+                talepListesiDiv.innerHTML = "<p style='color:#666; margin-top:50px;'>Şu an aktif talep bulunmuyor.</p>";
+                return;
+            }
+
+            snapshot.forEach((childSnapshot) => {
+                const veri = childSnapshot.val();
+                const id = childSnapshot.key;
+
+                const kart = `
+                    <div class="talep-kart">
+                        <div class="talep-bilgi">
+                            <strong>${veri.masa}</strong>
+                            <span class="talep-turu">${veri.tur}</span>
+                            <span class="zaman">🕒 ${veri.zaman}</span>
+                        </div>
+                        <button class="tamam-btn" onclick="tamamla('${id}')">Onayla</button>
+                    </div>
+                `;
+                talepListesiDiv.innerHTML += kart;
+            });
+        });
+
+        // Talebi silme (Tamamlandı butonu)
+        window.tamamla = function(id) {
+            remove(ref(database, 'talepler/' + id));
+        };
+    </script>
+</body>
+</html>

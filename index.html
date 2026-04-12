@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diyarı Vefa - Dijital Hizmet Paneli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ana-renk: #c69c6d; /* Logonun içindeki Altın/Bronz tonu */
+            --arka-plan: #121212; /* Logonun koyu arka planı */
+            --kart-bg: #1e1e1e;
+            --golge: rgba(198, 156, 109, 0.3); /* Altın rengi gölge */
+        }
+
+        body {
+            margin: 0; padding: 0;
+            background-color: var(--arka-plan);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+        }
+
+        header {
+            padding: 40px 20px;
+            background: linear-gradient(to bottom, #000, var(--arka-plan));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid var(--ana-renk);
+            box-shadow: 0 0 20px var(--golge);
+            margin-bottom: 20px;
+            /* YAPIŞTIRMA NOTU: Eğer elinde logo görseli varsa dosyanın adını buraya yaz */
+            background-image: url('logo.jpg'); 
+            background-size: cover;
+            background-position: center;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--ana-renk);
+            margin: 0;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .servis-paneli {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .servis-btn {
+            background: var(--kart-bg);
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Hover Etkisi: Üzerine gelince altın parlama */
+        .servis-btn:hover {
+            border-color: var(--ana-renk);
+            box-shadow: 0 0 15px var(--golge);
+        }
+
+        /* Tıklama Etkisi: Hafifçe içeri çökme ve titreşim */
+        .servis-btn:active {
+            transform: scale(0.92);
+        }
+
+        /* Başarılı Talepler İçin Animasyonlu Işık Efekti */
+        .servis-btn.active {
+            animation: pulse 1s infinite;
+            border-color: var(--ana-renk);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 10px var(--golge); }
+            50% { box-shadow: 0 0 20px var(--ana-renk); }
+            100% { box-shadow: 0 0 10px var(--golge); }
+        }
+
+        .kategori-baslik {
+            border-left: 4px solid var(--ana-renk);
+            text-align: left;
+            margin: 30px 20px 15px;
+            padding-left: 10px;
+            font-weight: 600;
+            color: var(--ana-renk);
+            letter-spacing: 1px;
+        }
+          .urun-karti {
+            background: var(--kart-bg);
+            margin: 10px 20px;
+            padding: 18px; /* Biraz daha genişlettik, ferahladı */
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #2a2a2a;
+            transition: 0.3s;
+        }
+
+        /* Ürün İsmi ve Açıklama Alanı */
+        .urun-info {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .urun-ad {
+            color: #ffffff; /* Bembeyaz ve net */
+            font-weight: 500;
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .urun-detay {
+            color: #a0a0a0; /* Sönük gri, profesyonel açıklama rengi */
+            font-size: 0.75rem;
+            font-weight: 300;
+        }
+
+        .fiyat { 
+            color: var(--ana-renk); 
+            font-weight: 700; 
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo"></div> <h1>DİYARI VEFA</h1>
+    <p style="opacity: 0.6; font-size: 0.9rem; letter-spacing: 1px;">Dijital Hizmet Paneli</p>
+</header>
+
+<div class="servis-paneli">
+    <button class="servis-btn" onclick="talepGonder('🔔 Garson Çağır', this)"><span style="font-size: 2rem;">🔔</span> Garson</button>
+    <button class="servis-btn" onclick="talepGonder('🔥 Köz İste', this)"><span style="font-size: 2rem;">🔥</span> Köz İste</button>
+    <button class="servis-btn" onclick="talepGonder('💳 Hesap İste', this)"><span style="font-size: 2rem;">💳</span> Hesap</button>
+    <button class="servis-btn" onclick="talepGonder('💧 Su İste', this)"><span style="font-size: 2rem;">💧</span> Su İste</button>
+</div>
+<div class="kategori-baslik">💨 PREMİUM NARGİLELER</div>
+<div class="urun-karti">
+    <div class="urun-info">
+        <span class="urun-ad">Love 66</span>
+        <span class="urun-detay">Karpuz, kavun, çilek ve mentolün eşsiz uyumu.</span>
+    </div>
+    <span class="fiyat">280 TL</span>
+</div>
+
+<div class="urun-karti">
+    <div class="urun-info">
+        <span class="urun-ad">Lady Killer</span>
+        <span class="urun-detay">Mango, kavun ve böğürtlenli tatlı karışım.</span>
+    </div>
+    <span class="fiyat">280 TL</span>
+</div>
+
+<div class="kategori-baslik">☕ İÇECEKLER</div>
+<div class="urun-karti">
+    <div class="urun-info">
+        <span class="urun-ad">Türk Kahvesi</span>
+        <span class="urun-detay">Bol köpüklü, yanında lokum ve su ile.</span>
+    </div>
+    <span class="fiyat">75 TL</span>
+</div>
+
+<div class="urun-karti">
+    <div class="urun-info">
+        <span class="urun-ad">Buzlu Latte</span>
+        <span class="urun-detay">Soğuk süt ve espresso, ferahlatıcı lezzet.</span>
+    </div>
+    <span class="fiyat">110 TL</span>
+</div>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    // KENDİ FIREBASE CONFIG KODLARINI BURAYA YAPIŞTIR
+    const firebaseConfig = {
+        apiKey: "AIzaSyAw_0IovkGJLXoSpG8NlhReI1zACh5Quis",
+        authDomain: "diyar-i-vefa-menu-e2aa9.firebaseapp.com",
+        databaseURL: "https://diyar-i-vefa-menu-e2aa9-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "diyar-i-vefa-menu-e2aa9",
+        storageBucket: "diyar-i-vefa-menu-e2aa9.firebasestorage.app",
+        messagingSenderId: "741373134834",
+        appId: "1:741373134834:web:47614d282765b4b529cd6b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    window.talepGonder = function(talepTuru, buttonElement) {
+        // Masa Kodunu Okuma
+        const urlParams = new URLSearchParams(window.location.search);
+        let masaNo = urlParams.get('masa'); 
+        if(!masaNo) { masaNo = "Bilinmeyen"; }
+
+        // Görsel Geri Bildirim: Butonun yanıp sönmesini sağla
+        buttonElement.classList.add('active');
+        setTimeout(() => buttonElement.classList.remove('active'), 1500);
+
+        const talepRef = ref(database, 'talepler');
+        const yeniTalep = push(talepRef);
+        
+        set(yeniTalep, {
+            masa: "Masa " + masaNo,
+            tur: talepTuru,
+            zaman: new Date().toLocaleTimeString(),
+            durum: "bekliyor"
+        })
+        .then(() => {
+            alert("Masa " + masaNo + ": Talebiniz iletildi. Hemen ilgileniyoruz.");
+        })
+        .catch((error) => {
+            alert("Bağlantı Hatası: " + error.message);
+        });
+    };
+</script>
+
+</body>
+</html>
